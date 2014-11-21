@@ -1,0 +1,14 @@
+<table class="table">
+	<tr>
+		<td></td>
+		<td ng-repeat="company in erp.companies">
+			{{company.name}}
+		</td>
+	</tr>
+	<tr ng-repeat="product in erp.products">
+		<td>{{product.name}}</td>
+		<td ng-repeat="company in erp.companies">
+			<input type="checkbox" ng-checked="erp.hasProduct(product.name,company.name)">
+		</td>
+	</tr>
+</table>

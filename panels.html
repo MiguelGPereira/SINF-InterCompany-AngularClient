@@ -1,0 +1,25 @@
+<section>
+	<ul class="nav nav-pills">
+		<li ng-class="{active:panel.isSelected(1)}">
+			<a href ng-click="panel.selectTab(1)">Companies</a>
+		</li>
+		<li ng-class="{active:panel.isSelected(2)}">
+			<a href ng-click="panel.selectTab(2)">Products</a>
+		</li>
+		<li ng-class="{active:panel.isSelected(3)}">
+			<a href ng-click="panel.selectTab(3)">Orders</a>
+		</li>
+	</ul>
+	<!-- Panels -->
+	<div id="erp" ng-controller="ERPController as erp">
+		<div class="panel" ng-show="panel.isSelected(1)">
+			<companies></companies>
+		</div>
+		<div class="panel" ng-show="panel.isSelected(2)">
+			<products></products>
+		</div>
+		<div class="panel" ng-show="panel.isSelected(3)">
+			<orders></orders>
+		</div>
+	</div>
+</section>
