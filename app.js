@@ -1,6 +1,22 @@
 (function() {
 
-	var app = angular.module('sinf4', []);
+	var app = angular.module('inter-company', []);
+
+	// === LOGIN ===
+	$('#loginAdmin').click(function () {
+		document.cookie = 'level=1';
+	});
+	$('#loginClient').click(function () {
+		document.cookie = 'level=2';
+	});
+	$('#loginSupplier').click(function () {
+		document.cookie = 'level=3';
+	});
+	function getCookie(name) {
+	  var value = "; " + document.cookie;
+	  var parts = value.split("; " + name + "=");
+	  if (parts.length == 2) return parts.pop().split(";").shift();
+	}
 
 	// ==== CONTROLLERS ====
 	app.controller("ERPController", function(){
@@ -26,7 +42,17 @@
 			restrict: 'E',
 			templateUrl: 'panels.html',
 			controller:function () {
-				this.tab = 1;
+				var level = getCookie('level');
+				this.isAdmin = function () {
+					return level == 1;
+				}
+				this.isClient = function () {
+					return level == 2;
+				}
+				this.isSupplier = function () {
+					return level == 3;
+				}
+				this.tab = 0;
 				this.selectTab = function (setTab) {
 					this.tab = setTab;
 				};
@@ -56,6 +82,20 @@
 		return {
 			restrict: 'E',
 			templateUrl: 'orders.html'
+		};
+	});
+
+	app.directive('receipts',function () {
+		return {
+			restrict: 'E',
+			templateUrl: 'receipts.html'
+		};
+	});
+
+	app.directive('clientsSuppliers',function () {
+		return {
+			restrict: 'E',
+			templateUrl: 'clients-suppliers.html'
 		};
 	});
 

@@ -1,13 +1,19 @@
 <section>
 	<ul class="nav nav-pills">
-		<li ng-class="{active:panel.isSelected(1)}">
+		<li ng-class="{active:panel.isSelected(1)}" ng-show="panel.isAdmin()">
 			<a href ng-click="panel.selectTab(1)">Companies</a>
 		</li>
-		<li ng-class="{active:panel.isSelected(2)}">
+		<li ng-class="{active:panel.isSelected(2)}" ng-show="panel.isAdmin()">
 			<a href ng-click="panel.selectTab(2)">Products</a>
 		</li>
-		<li ng-class="{active:panel.isSelected(3)}">
-			<a href ng-click="panel.selectTab(3)">Orders</a>
+		<li ng-class="{active:panel.isSelected(3)}" ng-show="panel.isAdmin()">
+			<a href ng-click="panel.selectTab(3)">Clients&Suppliers</a>
+		</li>
+		<li ng-class="{active:panel.isSelected(4)}" ng-hide="panel.isAdmin()">
+			<a href ng-click="panel.selectTab(4)">Orders</a>
+		</li>
+		<li ng-class="{active:panel.isSelected(5)}" ng-hide="panel.isAdmin()">
+			<a href ng-click="panel.selectTab(5)">Receipts</a>
 		</li>
 	</ul>
 	<!-- Panels -->
@@ -19,7 +25,13 @@
 			<products></products>
 		</div>
 		<div class="panel" ng-show="panel.isSelected(3)">
+			<clients-suppliers></clients-suppliers>
+		</div>
+		<div class="panel" ng-show="panel.isSelected(4)">
 			<orders></orders>
+		</div>
+		<div class="panel" ng-show="panel.isSelected(5)">
+			<receipts></receipts>
 		</div>
 	</div>
 </section>
