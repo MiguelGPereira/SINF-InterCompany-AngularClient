@@ -2,19 +2,91 @@
 <html>
 	<head>
 		<!-- CSS -->
+		<link href='http://fonts.googleapis.com/css?family=Ruda:400,900,700' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="assets/theme/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="assets/theme/css/font-awesome.css" />
+		<link rel="stylesheet" type="text/css" href="assets/theme/css/color.css" />
+
+		<script src="assets/js/modernizr.js"></script>
 	</head>
 	<body ng-app="inter-company">
 
-		
-		<a id="loginAdmin" href="index.html" class="btn btn-default">Admin</a>
-		<a id="loginClient" href="index.html" class="btn btn-default">Client</a>
-		<a id="loginSupplier" href="index.html" class="btn btn-default">Supplier</a>
-		
+		<div class="topbar clearfix">
+    	<div class="container">
+				<div class="col-lg-12 text-right">
+	          <div class="social_buttons">
+	              <a href="#" data-toggle="tooltip" data-placement="bottom" title="Facebook"><i class="fa fa-facebook"></i></a>
+	              <a href="#" data-toggle="tooltip" data-placement="bottom" title="Twitter"><i class="fa fa-twitter"></i></a>
+	              <a href="#" data-toggle="tooltip" data-placement="bottom" title="Google+"><i class="fa fa-google-plus"></i></a>
+	              <a href="#" data-toggle="tooltip" data-placement="bottom" title="Dribbble"><i class="fa fa-dribbble"></i></a>
+	              <a href="#" data-toggle="tooltip" data-placement="bottom" title="RSS"><i class="fa fa-rss"></i></a>
+	          </div>
+				</div>
+    	</div><!-- end container -->
+    </div><!-- end topbar -->
+
+		<section class="section1">
+	    	<div class="container">
+	        	<div class="col-lg-4 col-md-4 col-sm-4">
+							<div class="servicebox text-center">
+								<div class="service-icon">
+									<div class="dm-icon-effect-1" data-effect="slide-left">
+										 <a id="loginAdmin" href="index.html">
+											<i class="active dm-icon fa fa-bars fa-3x"></i>
+									</div>
+                  <div class="servicetitle">
+										<h4>Admin</a></h4><hr>
+                  </div>
+									<p>Can view companies and manage products as well as client/supplier relationships.</p>
+								</div><!-- service-icon -->
+							</div><!-- servicebox -->
+	        	</div><!-- large-4 -->
+	        	<div class="col-lg-4 col-md-4 col-sm-4">
+							<div class="servicebox text-center">
+								<div class="service-icon">
+									<div class="dm-icon-effect-1" data-effect="slide-bottom">
+										 <a id="loginClient" href="index.html">
+											<i class="active dm-icon fa fa-laptop fa-3x"></i>
+									</div>
+			           	<div class="servicetitle">
+										<h4>Client</a></h4><hr>
+			            </div>
+									<p>Responsible for creating new orders.</p>
+								</div><!-- service-icon -->
+							</div><!-- servicebox -->
+	        	</div><!-- large-4 -->
+	        	<div class="col-lg-4 col-md-4 col-sm-4">
+							<div class="servicebox text-center">
+								<div class="service-icon">
+									<div class="dm-icon-effect-1" data-effect="slide-right">
+										 <a id="loginSupplier" href="index.html">
+											<i class="active dm-icon fa fa-book fa-3x"></i>
+									</div>
+		            	<div class="servicetitle">
+										<h4>Supplier</a></h4><hr>
+			            </div>
+									<p>Creates receipts for pending orders</p>
+								</div><!-- service-icon -->
+							</div><!-- servicebox -->
+	        	</div><!-- large-4 -->
+	        </div><!-- end container -->
+		</section><!-- end section -->
+
+
 		<!-- Javascript -->
 		<script type="text/javascript" src="assets/js/jquery.js"></script>
 		<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="assets/js/jquery.unveilEffects.js"></script>
+
+		<!-- Main Scripts-->
+		<script src="assets/theme/js/retina-1.1.0.js"></script>
+		<script src="assets/theme/js/jquery.hoverdir.js"></script>
+		<script src="assets/theme/js/owl.carousel.js"></script>
+		<script src="assets/theme/js/jetmenu.js"></script>
+		<script src="assets/theme/js/jquery.hoverex.min.js"></script>
+		<script src="assets/theme/js/jquery.prettyPhoto.js"></script>
+
 		<script type="text/javascript" src="assets/js/angular.min.js"></script>
 		<script type="text/javascript" src="app.js"></script>
 	</body>
