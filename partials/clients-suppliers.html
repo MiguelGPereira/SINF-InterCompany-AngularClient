@@ -1,1 +1,22 @@
-<p>suppliers-clients</p>
+<div class="row">
+    <div class="col-md-4">
+        <select class="form-control" ng-model="erp.companyRelated" ng-options="company.name for company in erp.companies"></select>
+    </div>
+    <div class="col-md-8">
+        <table class="table" ng-model="erp.companyRelated" ng-show="erp.isCompanySelected()">
+            <tr ng-repeat="companyToRelate in erp.companies" ng-if="companyToRelate != erp.companyRelated">
+                <td>
+                    {{companyToRelate.name}}
+                </td>
+                <td>
+                    <input type="checkbox" ng-checked="erp.hasRelation(companyToRelate,erp.companyRelated)"
+                           ng-model="erp.status[companyToRelate.name]"
+                           ng-change="erp.changeRelation(erp.companyRelated,companyToRelate)"
+                           ng-true-value="true"
+                           ng-false-value="false"
+                           ng-disabled="erp.hasRelation(companyToRelate,erp.companyRelated)">
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
