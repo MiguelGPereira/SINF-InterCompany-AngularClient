@@ -15,10 +15,11 @@
 
 	// ==== Controllers ====
 	app.controller("ERPController", function(){
-		this.companies = companies;
-		this.products = products;
+		this.companies = getCompanies();//GET companies
+		this.products = getProducts();//GET products
+		this.orders = getOrders();//GET orders
 		this.order = {};
-		this.orders = orders;
+		this.relations = getRelations();//GET relations
 		this.hasProduct = function (product, company) {
 			for(var p in products)
 				if(products[p].name == product && $.inArray(company,products[p].companies) != -1)
@@ -26,9 +27,33 @@
 			return false;
 		};
 		this.addOrder = function () {
-			this.orders.push(this.order);
+			this.orders.push(this.order);//POST order
 			this.order = {};
 		};
+		this.companyRelated= {};
+		this.isCompanySelected = function () {
+			var isSelected = !$.isEmptyObject(this.companyRelated);
+			return isSelected;
+		}
+		var getRelation = function(company1, company2) {
+			for(var r in relations)//GET relations
+				if(
+					(relations[r].company1 == company1.name && relations[r].company2 == company2.name) ||
+					(relations[r].company1 == company2.name && relations[r].company2 == company1.name)
+				)
+					return relations[r];
+			return null
+		}
+		this.hasRelation = function (company1, company2) {
+			if(getRelation(company1,company2) != null)
+				return true;
+			return false;
+		}
+		this.changeRelation = function (companyRelated, companyToRelate) {
+			if(this.status[companyToRelate.name])
+				relations.push({company1: companyRelated.name, company2: companyToRelate.name});//POST relation
+
+		}
 	});
 
 	// ==== DataLayer ====
@@ -53,21 +78,27 @@
 	},
 	{
 	  	name: "Google"
-	 }];
-	 var relations = [
+	},
+	{
+		name: "Facebook"
+	}];
+	var relations = [
 	 {
-	 	company1: "Microsoft",
-	 	company2: "Google",
-	 	isRelated: true
-	 }];
+		company1: "Microsoft",
+		company2: "Google"
+	 },
+	{
+		company1: "Facebook",
+		company2: "Google"
+	}];
 	 var products = [
 	 {
-	 	name: "cobre",
-	 	companies: ["Microsoft","Google"]
+		name: "cobre",
+		companies: ["Microsoft","Google"]
 	 },
 	 {
-	 	name: "basalto",
-	 	companies: ["Google"]
+		name: "basalto",
+		companies: ["Google"]
 	 }];
 	 var orders = [
 	 {
