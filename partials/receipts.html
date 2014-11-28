@@ -1,26 +1,33 @@
-<p>receipts</p>
 <div class="row">
-  <div class="col-md-6" ng-hide="true">FORM</div>
-  <div class="col-md-6">LIST</div>
-</div>
-
-<p>Make receipt to order</p>
-<div class="row">
-  <div class="col-md-6" ng-hide="true">
-  	<h4>{{order.name}}</h4>
-  	<h4>{{order.buyer}}</h4>
-  	<h4>{{order.seller}}</h4>
-  	<button type="button"> Generate receipt </button>
+  <div class="col-md-6">
+	  <button ng-click="erp.setModal()"> New </button>
   </div>
   <div class="col-md-6">
   	<ul class="list-group">
 		<li class="list-group-item" ng-repeat="receipt in erp.receipts">
-			<h4>{{receipt.name}}</h4>
-			<h4>{{receipt.buyer}}</h4>
-			<h4>{{receipt.seller}}</h4>
-			<h4>{{receipt.state}}</h4>
+			<h4>{{receipt.companyFrom.name}}</h4>
+			<h4>{{receipt.companyTo.name}}</h4>
+			<h4>{{receipt.product.name}}</h4>
 		</li>
 	</ul>
   </div>
 </div>
 
+<div class="modal fade" id="newReceiptModal" tabindex="-1" role="dialog" aria-labellebdy="newReceiptLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+	  		<div class="modal-header">
+	    		<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	    		<h4 class="modal-title" id="newReceiptLabel">Pending orders</h4>
+	 		</div>
+	  		<div class="modal-body">
+	    		<li class="list-group-item" ng-repeat="order in erp.orders" ng-if="order.state == 'pending'">
+		  			<h4>{{order.companyFrom.name}}</h4>
+					<h4>{{order.companyTo.name}}</h4>
+					<h4>{{order.product.name}}</h4>
+		  			<button type="button" ng-click="erp.newReceipt(order)"> Generate receipt </button>
+				</li>      
+			</div>
+		</div>
+	</div>
+</div>

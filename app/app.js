@@ -12,7 +12,7 @@
 	$('#loginSupplier').click(function () {
 		document.cookie = 'level=3';
 	});
-
+	
 	// ==== Controllers ====
 	app.controller("ERPController", function(){
 		this.companies = getCompanies();//GET companies
@@ -20,6 +20,7 @@
 		this.orders = getOrders();//GET orders
 		this.order = {};
 		this.relations = getRelations();//GET relations
+		this.receipts = getReceipts();
 		this.hasProduct = function (product, company) {
 			for(var p in products)
 				if(products[p].name == product && $.inArray(company,products[p].companies) != -1)
@@ -27,6 +28,7 @@
 			return false;
 		};
 		this.addOrder = function () {
+			this.order.state = 'pending'
 			this.orders.push(this.order);//POST order
 			this.order = {};
 		};
@@ -53,6 +55,19 @@
 			if(this.status[companyToRelate.name])
 				relations.push({company1: companyRelated.name, company2: companyToRelate.name});//POST relation
 
+		}
+		this.newReceipt = function (order) {
+			var receipt = {};
+			receipt.companyFrom = order.companyTo;
+			receipt.companyTo = order.companyFrom;
+			receipt.product = order.product;
+			receipts.push(receipt);
+			var index = $.inArray(order, this.orders);
+			this.orders[index].state = 'done';
+		}
+		this.setModal = function(){
+			$('#newReceiptModal').appendTo("body");
+			$('#newReceiptModal').modal("show");
 		}
 	});
 
@@ -100,19 +115,7 @@
 		name: "basalto",
 		companies: ["Google"]
 	 }];
-	 var orders = [
-	 {
-	 	name: "order1",
-	 	buyer: "company1",
-	 	seller: "company2",
-	 	state: "done"
-	 },
-	 {
-	 	name: "order2"
-	 	buyer: "company2",
-	 	seller: "company3",
-	 	state: "done"
-	 }];
+	 var orders = [];
 	 var receipts = [
 	 {
 	 	name: "receipt1",
