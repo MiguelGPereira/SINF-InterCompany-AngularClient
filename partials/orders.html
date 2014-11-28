@@ -1,14 +1,29 @@
-<blockquote ng-repeat="order in erp.orders">
+<!--<blockquote ng-repeat="order in erp.orders">
 	<b>From </b>{{order.companyFrom.name}}<b> To </b>{{order.companyTo.name}}<br/>
 	<cite>{{order.product.name}}</cite>
-</blockquote>
+</blockquote>-->
 
-<form name="orderForm" ng-submit="erp.addOrder()">
-	<label>from:</label>
-	<select ng-model="erp.order.companyFrom" ng-options="company.name for company in erp.companies"></select>
-	<label>to:</label>
-	<select ng-model="erp.order.companyTo" ng-options="company.name for company in erp.companies"></select>
-	<label>product:</label>
-	<select ng-model="erp.order.product" ng-options="product.name for product in erp.products"></select>
-	<input type="submit" value="Submit" />
-</form>
+<p>Make new order</p>
+<div class="row">
+  <div class="col-md-6" ng-hide="true">
+	<form name="orderForm" ng-submit="erp.addOrder()">
+		<label>from:</label>
+		<select ng-model="erp.order.companyFrom" ng-options="company.name for company in erp.companies"></select>
+		<label>to:</label>
+		<select ng-model="erp.order.companyTo" ng-options="company.name for company in erp.companies"></select>
+		<label>product:</label>
+		<select ng-model="erp.order.product" ng-options="product.name for product in erp.products"></select>
+		<input type="submit" value="Submit" />
+	</form>
+  </div>
+  <div class="col-md-6">
+  	<ul class="list-group">
+		<li class="list-group-item" ng-repeat="order in erp.orders">
+			<h4>{{order.name}}</h4>
+			<h4>{{order.buyer}}</h4>
+			<h4>{{order.seller}}</h4>
+			<h4>{{order.state}}</h4>
+		</li>
+	</ul>
+  </div>
+</div>

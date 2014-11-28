@@ -69,7 +69,25 @@
 	 	name: "basalto",
 	 	companies: ["Google"]
 	 }];
-	 var orders = [];
-	 var receipts = [];
+	 var orders = [
+	 {
+	 	name: "order1",
+	 	buyer: "company1",
+	 	seller: "company2",
+	 	state: "done"
+	 },
+	 {
+	 	name: "order2"
+	 	buyer: "company2",
+	 	seller: "company3",
+	 	state: "done"
+	 }];
+	 var receipts = [
+	 {
+	 	name: "receipt1",
+	 	buyer: "company2",
+	 	seller: "company3",
+	 	state: "done"
+	 }];
 
 })();
