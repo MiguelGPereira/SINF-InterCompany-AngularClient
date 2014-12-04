@@ -8,7 +8,12 @@
 	<tr ng-repeat="product in erp.products">
 		<td>{{product.name}}</td>
 		<td ng-repeat="company in erp.companies">
-			<input type="checkbox" ng-checked="erp.hasProduct(product.name,company.name)">
+			<input type="checkbox" ng-checked="erp.hasProduct(product.name,company.name)"
+				   	ng-model="erp.status[company.name][product.name]"
+				   	ng-change="erp.addProduct(product, company)"
+					ng-true-value="true"
+					ng-false-value="false"
+					ng-disabled="erp.hasProduct(product.name,company.name)">
 		</td>
 	</tr>
 </table>

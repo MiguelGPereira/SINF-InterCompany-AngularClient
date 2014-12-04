@@ -66,8 +66,11 @@
 			this.orders[index].state = 'done';
 		}
 		this.setModal = function(){
-			$('#newReceiptModal').appendTo("body");
-			$('#newReceiptModal').modal("show");
+			$('#newReceiptModal').appendTo("body").modal("show");
+		}
+		this.addProduct = function(product, company){
+			if(this.status[company.name][product.name])
+				products[$.inArray(product,products)].companies.push(company.name);
 		}
 	});
 
