@@ -29,6 +29,22 @@
 		};
 		this.addOrder = function () {
 			this.order.state = 'pending'
+			//console.log(this.order);
+			for(var p in this.order.products){
+			//	console.log("in for");
+				if (this.order.products[p].quantity == "0"
+				|| this.order.products[p].quantity == ""){
+					delete this.order.products[p];
+			//		console.log("antes"+this.order.products[p].name);
+					/*this.order.products = $.grep(this.order.products, function (value) {
+						return value != this.order.products[p]; 
+					});*/
+					console.log("depois");
+				}
+				
+
+			}
+			//console.log(this.order);
 			this.orders.push(this.order);//POST order
 			this.order = {};
 		};

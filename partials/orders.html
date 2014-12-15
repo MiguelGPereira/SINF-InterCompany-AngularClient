@@ -5,8 +5,12 @@
 		<select class="form-control" ng-model="erp.order.companyFrom" ng-options="company.name for company in erp.companies"></select>
 		<label>to:</label>
 		<select class="form-control" ng-model="erp.order.companyTo" ng-options="company.name for company in erp.companies"></select>
-		<label>product:</label>
-		<select class="form-control" ng-model="erp.order.product" ng-options="product.name for product in erp.products"></select>
+		<ul class="list-group">
+			<li class="list-group-item" ng-repeat="product in erp.products | orderBy:'name'">
+				<h4>{{erp.order.products[product.name].name=product.name}}</h4>
+				Quantity: <input type="text" ng-model="erp.order.products[product.name].quantity" ng-init="erp.order.products[product.name].quantity = 0"/>
+			</li>
+		</ul>
 		<input class="btn" type="submit" value="Create" />
 	</form>
   </div>
@@ -15,7 +19,12 @@
 		<li class="list-group-item" ng-repeat="order in erp.orders">
 			<h4>{{order.companyFrom.name}}</h4>
 			<h4>{{order.companyTo.name}}</h4>
-			<h4>{{order.product.name}}</h4>
+			<ul class="list-group">
+				<li class="list-group-item" ng-repeat="product in order.products">
+					<h4>{{product.name}}</h4>
+					<h4>{{product.quantity}}</h4>
+				</li>
+			</ul>
 			<h4><span ng-class="order.state=='done' ? 'label label-success' : 'label label-warning'">{{order.state}}</h4>
 		</li>
 	</ul>
