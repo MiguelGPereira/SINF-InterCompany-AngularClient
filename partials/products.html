@@ -2,18 +2,18 @@
 	<tr>
 		<td></td>
 		<td ng-repeat="company in erp.companies">
-			{{company.name}}
+			{{company.nomeEmpresa}}
 		</td>
 	</tr>
 	<tr ng-repeat="product in erp.products">
-		<td>{{product.name}}</td>
+		<td>{{product.DescArtigo}}</td>
 		<td ng-repeat="company in erp.companies">
-			<input type="checkbox" ng-checked="erp.hasProduct(product.name,company.name)"
-				   	ng-model="erp.status[company.name][product.name]"
+			<input type="checkbox" ng-checked="erp.hasProduct(product.CodArtigo,company.codEmpresa)"
+				   	ng-model="erp.status[company.codEmpresa][product.CodArtigo]"
 				   	ng-change="erp.addProduct(product, company)"
 					ng-true-value="true"
 					ng-false-value="false"
-					ng-disabled="erp.hasProduct(product.name,company.name)">
+					ng-disabled="erp.hasProduct(product.CodArtigo,company.codEmpresa)">
 		</td>
 	</tr>
 </table>
