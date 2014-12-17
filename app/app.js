@@ -2,6 +2,8 @@
 
 	var app = angular.module('inter-company', ['directives']);
 
+	var apiURL = "http://127.0.0.1:49822";
+
 	// === Auth ===
 	$('#loginAdmin').click(function () {
 		document.cookie = 'level=1';
@@ -15,58 +17,106 @@
 	
 	// ==== Controllers ====
 	app.controller("ERPController", ['$http', function($http){
+
 		var erp = this;
 
+		//Aux functions
+
+		var hasProduct = function(products,cod){
+			for (var i = products.length - 1; i >= 0; i--) {
+				if (products[i].CodArtigo == cod)
+					return i;
+			}
+			return null;
+		};
+		var hasCompany = function (empresas,cod) {
+			for (var i = empresas.length - 1; i >= 0; i--) {
+				if (empresas[i].CodArtigo == cod)
+					return true;
+			}
+			return false;
+		};
+
+		var getRelation = function(company1, company2) {
+			var relations = erp.relations;
+			for(var r in relations)//GET relations
+				if(
+					(relations[r].company1 == company1 && relations[r].company2 == company2) ||
+					(relations[r].company1 == company2 && relations[r].company2 == company1)
+				)
+					return relations[r];
+			return null
+		}
+
+		var hasRelation = function (company1, company2) {
+			if(getRelation(company1,company2) != null)
+				return true;
+			return false;
+		};
+		erp.hasRelation = hasRelation;
+
+		//End aux
+
 		erp.companies = [];
-		$http.get('http://localhost:49822/api/empresas').success(function (data) {
+		$http.get(apiURL+'/api/empresas').success(function (data) {
 			erp.companies = data;
 			getProducts();
+			getRelations();
 		});
 
 		erp.products = [];
 		var getProducts = function () {
 			for(var c in erp.companies){
-				console.log("asd");
-				$http.get('http://localhost:49822/api/artigos?codEmpresa='+erp.companies[c].codEmpresa).success(function (data) {
-					console.log("asd2");
-					var hasProduct = function(products,cod){
-						for (var i = products.length - 1; i >= 0; i--) {
-							if (products[i].CodArtigo == cod)
-								return i;
+				var cod = erp.companies[c].codEmpresa;
+				(function(cod) {
+					$http.get(apiURL+'/api/artigos?codEmpresa='+cod).success(function (data) {
+						for(var d in data){
+							var codA = data[d].CodArtigo;
+							var index = hasProduct(erp.products,codA);
+							if(index != null){
+								if(hasCompany(erp.products[index].empresas,cod))
+									erp.products[index].empresas.push(cod)
+							} else {
+								var product = data[d];
+								product.empresas = [cod];
+								erp.products.push(product);
+								console.log(product);
+							}
 						}
-						return null;
-					};
-					var hasCompany = function (empresas,cod) {
-						for (var i = empresas.length - 1; i >= 0; i--) {
-							if (empresas[i].CodArtigo == cod)
-								return true;
-						}
-						return false;
-					};
-					for(var d in data){
-						var codA = data[d].CodArtigo;
-						var index = hasProduct(erp.products,codA);
-						if(index != null){
-							if(hascompany(erp.products[index].empresas,erp.companies[c].codEmpresa))
-								erp.products[index].empresas.push(erp.companies[c].codEmpresa)
-						} else {
-							var product = data[d];
-							product.empresas = [erp.companies[c].codEmpresa];
-							erp.products.push(product);
-							console.log(product);
-						}
-					}
-				});	
+					});
+				})(cod);
 			}
 		};
 		
 
-		
+		erp.relations = [];
+		var getRelations = function () {
+			for(var c in erp.companies){
+				var cod = erp.companies[c].codEmpresa;
+				(function(cod) {
+					$http.get(apiURL+'/api/fornecedores?codEmpresa='+cod).success(function (data) {
+						for(var d in data){
+							var codForn = data[d].CodFornecedor;
+							if(!hasRelation(cod, codForn))
+								erp.relations.push({company1: cod, company2: codForn});
+						}
+					});
+					$http.get(apiURL+'/api/clientes?codEmpresa='+cod).success(function (data) {
+						for(var d in data){
+							var CodCli = data[d].CodCliente;
+							if(!hasRelation(cod, CodCli))
+								erp.relations.push({company1: cod, company2: CodCli});
+						}
+					});
+				})(cod);
+			}
+		};
+
 
 		//this.products = getProducts();//GET products
 		this.orders = getOrders();//GET orders
 		this.order = {};
-		this.relations = getRelations();//GET relations
+		//this.relations = getRelations();//GET relations
 		this.receipts = getReceipts();
 		this.hasProduct = function (product, company) {
 			for(var p in erp.products)
@@ -84,20 +134,12 @@
 			var isSelected = !$.isEmptyObject(this.companyRelated);
 			return isSelected;
 		}
-		var getRelation = function(company1, company2) {
-			for(var r in relations)//GET relations
-				if(
-					(relations[r].company1 == company1.nomeEmpresa && relations[r].company2 == company2.nomeEmpresa) ||
-					(relations[r].company1 == company2.nomeEmpresa && relations[r].company2 == company1.nomeEmpresa)
-				)
-					return relations[r];
-			return null
-		}
-		this.hasRelation = function (company1, company2) {
+
+		/*this.hasRelation = function (company1, company2) {
 			if(getRelation(company1,company2) != null)
 				return true;
 			return false;
-		}
+		}*/
 		this.changeRelation = function (companyRelated, companyToRelate) {
 			if(this.status[companyToRelate.nomeEmpresa])
 				relations.push({company1: companyRelated.nomeEmpresa, company2: companyToRelate.nomeEmpresa});//POST relation
