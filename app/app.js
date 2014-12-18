@@ -2,6 +2,8 @@
 
 	var app = angular.module('inter-company', ['directives']);
 
+	var apiURL = "http://127.0.0.1:49822";
+
 	// === Auth ===
 	$('#loginAdmin').click(function () {
 		document.cookie = 'level=1';
@@ -14,16 +16,114 @@
 	});
 	
 	// ==== Controllers ====
-	app.controller("ERPController", function(){
-		this.companies = getCompanies();//GET companies
-		this.products = getProducts();//GET products
+	app.controller("ERPController", ['$http', function($http){
+
+		var erp = this;
+
+		//Aux functions
+
+		var hasProduct = function(products,cod){
+			for (var i = products.length - 1; i >= 0; i--) {
+				if (products[i].CodArtigo == cod)
+					return i;
+			}
+			return null;
+		};
+		var hasCompany = function (empresas,cod) {
+			for (var i = empresas.length - 1; i >= 0; i--) {
+				if (empresas[i].CodArtigo == cod)
+					return true;
+			}
+			return false;
+		};
+
+		var getRelation = function(company1, company2) {
+			var relations = erp.relations;
+			for(var r in relations)//GET relations
+				if(
+					(relations[r].company1 == company1 && relations[r].company2 == company2) ||
+					(relations[r].company1 == company2 && relations[r].company2 == company1)
+				)
+					return relations[r];
+			return null
+		}
+
+		var hasRelation = function (company1, company2) {
+			if(getRelation(company1,company2) != null)
+				return true;
+			return false;
+		};
+		erp.hasRelation = hasRelation;
+
+		var spinner = new Spinner({top:'150%'}).spin();
+		$("#spinner").append(spinner.el);//hide spinner in last $http call
+
+		//End aux
+
+		erp.companies = [];
+		$http.get(apiURL+'/api/empresas').success(function (data) {
+			erp.companies = data;
+			getProducts();
+			getRelations();
+		});
+
+		erp.products = [];
+		var getProducts = function () {
+			for(var c in erp.companies){
+				var cod = erp.companies[c].codEmpresa;
+				(function(cod) {
+					$http.get(apiURL+'/api/artigos?codEmpresa='+cod).success(function (data) {
+						for(var d in data){
+							var codA = data[d].CodArtigo;
+							var index = hasProduct(erp.products,codA);
+							if(index != null){
+								if(hasCompany(erp.products[index].empresas,cod))
+									erp.products[index].empresas.push(cod)
+							} else {
+								var product = data[d];
+								product.empresas = [cod];
+								erp.products.push(product);
+							}
+						}
+					});
+				})(cod);
+			}
+		};
+		
+
+		erp.relations = [];
+		var getRelations = function () {
+			for(var c in erp.companies){
+				var cod = erp.companies[c].codEmpresa;
+				(function(cod) {
+					$http.get(apiURL+'/api/fornecedores?codEmpresa='+cod).success(function (data) {
+						for(var d in data){
+							var codForn = data[d].CodFornecedor;
+							if(!hasRelation(cod, codForn))
+								erp.relations.push({company1: cod, company2: codForn});
+						}
+					});
+					$http.get(apiURL+'/api/clientes?codEmpresa='+cod).success(function (data) {
+						for(var d in data){
+							var CodCli = data[d].CodCliente;
+							if(!hasRelation(cod, CodCli))
+								erp.relations.push({company1: cod, company2: CodCli});
+						}
+						$("#spinner").hide();
+					});
+				})(cod);
+			}
+		};
+
+
+		//this.products = getProducts();//GET products
 		this.orders = getOrders();//GET orders
 		this.order = {};
-		this.relations = getRelations();//GET relations
+		//this.relations = getRelations();//GET relations
 		this.receipts = getReceipts();
 		this.hasProduct = function (product, company) {
-			for(var p in products)
-				if(products[p].name == product && $.inArray(company,products[p].companies) != -1)
+			for(var p in erp.products)
+				if(erp.products[p].CodArtigo == product && $.inArray(company,erp.products[p].empresas) != -1)
 					return true;
 			return false;
 		};
@@ -61,23 +161,15 @@
 			var isSelected = !$.isEmptyObject(this.companyRelated);
 			return isSelected;
 		}
-		var getRelation = function(company1, company2) {
-			for(var r in relations)//GET relations
-				if(
-					(relations[r].company1 == company1.name && relations[r].company2 == company2.name) ||
-					(relations[r].company1 == company2.name && relations[r].company2 == company1.name)
-				)
-					return relations[r];
-			return null
-		}
-		this.hasRelation = function (company1, company2) {
+
+		/*this.hasRelationx = function (company1, company2) {
 			if(getRelation(company1,company2) != null)
 				return true;
 			return false;
-		}
+		}*/
 		this.changeRelation = function (companyRelated, companyToRelate) {
-			if(this.status[companyToRelate.name])
-				relations.push({company1: companyRelated.name, company2: companyToRelate.name});//POST relation
+			if(this.status[companyToRelate.nomeEmpresa])
+				relations.push({company1: companyRelated.nomeEmpresa, company2: companyToRelate.nomeEmpresa});//POST relation
 
 		}
 		this.newReceipt = function (order) {
@@ -93,8 +185,8 @@
 			$('#newReceiptModal').appendTo("body").modal("show");
 		}
 		this.addProduct = function(product, company){
-			if(this.status[company.name][product.name])
-				products[$.inArray(product,products)].companies.push(company.name);
+			if(this.status[company.codEmpresa][product.CodArtigo])
+				products[$.inArray(product,products)].companies.push(company.nomeEmpresa);
 		}
 		this.orderStateDone = function(){
 			for(var o in this.orders){
@@ -103,59 +195,16 @@
 			}
 				return false;
 		}
-	});
+	}]);
 
 	// ==== DataLayer ====
-	function getCompanies(){
-		return companies;
-	}
-	function getRelations(){
-		return relations;
-	}
-	function getProducts(){
-		return products;
-	}
 	function getOrders(){
 		return orders;
 	}
 	function getReceipts(){
 		return receipts;
 	}
-	var companies = [
-	{
-		name: "SuperChargers"
-	},
-	{
-	  	name: "Xamexung"
-	},
-	{
-		name: "PerfectGlass"
-	}];
-	var relations = [
-	 {
-		company1: "SuperChargers",
-		company2: "Xamexung"
-	 },
-	{
-		company1: "Xamexung",
-		company2: "PerfectGlass"
-	}];
-	 var products = [
-	 {
-		name: "bateria litio RM600",
-		companies: ["SuperChargers"],
-		price: "3$"
-	 },
-	 {
-		name: "bateria litio FM6250",
-		companies: ["SuperChargers"],
-		price: "15$"
-	 },
-	 {
-		name: "bateria litio M300",
-		companies: ["SuperChargers"],
-		price: "12$"
-	 }];
+	
 	 var orders = [];
 	 var receipts = [
 	 {

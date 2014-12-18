@@ -1,6 +1,20 @@
-<ul class="list-group">
-	<li class="list-group-item" ng-repeat="company in erp.companies | orderBy:'name'">
-		<h4>{{company.name}}
-		<em>{{company.id}}</em></h4>
-	</li>
-</ul>
+
+<div class="portfolio-centered">
+	<div class="recentitems portfolio">
+		<div ng-repeat="company in erp.companies | orderBy:'nomeEmpresa'" class="portfolio-item col-lg-4 col-md-4 col-sm-4 col-xs-12 mockups">
+			<div class="he-wrap tpl6 market-item">
+				<img src="/app/assets/images/company.jpg" alt="">
+				<div class="he-view">
+					<div class="bg a0" data-animate="fadeIn">
+						<h3 class="big a0" data-animate="fadeInDown">{{company.nomeEmpresa}}</h3>
+						<div class="portfolio_category text-center a2" data-animate="fadeIn">
+						</div><!-- portfolio_category -->
+					</div><!-- he bg -->
+				</div><!-- he view -->
+			</div><!-- he wrap -->
+			<h3 class="title">{{company.nomeEmpresa}}</h3>
+		</div><!-- end col-4 -->
+		<p ng-repeat="n in [1,2,3,4,5,6,7,8]">&nbsp;</p>
+	</div>
+	<p></p>
+</div>
