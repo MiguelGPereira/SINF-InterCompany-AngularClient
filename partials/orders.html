@@ -2,14 +2,14 @@
   <div class="col-md-6">
   	<form role="form" name="orderForm" ng-submit="erp.addOrder()">
 		<label>from:</label>
-		<select class="form-control" ng-model="erp.order.companyFrom" ng-options="company.name for company in erp.companies"></select>
+		<select class="form-control" ng-model="erp.order.companyFrom" ng-options="company.codEmpresa for company in erp.companies"></select>
 		<label>to:</label>
-		<select class="form-control" ng-model="erp.order.companyTo" ng-options="company.name for company in erp.companies"></select>
+		<select class="form-control" ng-model="erp.order.companyTo" ng-options="company.codEmpresa for company in erp.companies"></select>
 		<ul class="list-group">
 			<li class="list-group-item" ng-repeat="product in erp.products | orderBy:'name'">
-				<h4>{{erp.order.products[product.name].name=product.name}}</h4>
-				<p>Unit price: {{erp.order.products[product.name].price=product.price}}</p>
-				Quantity: <input type="text" ng-model="erp.order.products[product.name].quantity"/>
+				<h4>{{erp.order.products[product.DescArtigo].name=product.DescArtigo}}</h4>
+				<p>Unit price: {{erp.order.products[product.DescArtigo].price=product.DescArtigo}}</p>
+				Quantity: <input type="text" ng-model="erp.order.products[product.DescArtigo].quantity"/>
 			</li>
 		</ul>
 		<input class="btn" type="submit" value="Create" />
@@ -20,22 +20,22 @@
 		<li class="list-group-item" ng-repeat="order in erp.orders">
 			<h3>Order</h3>
 			<h4>From:</h4>
-			<p>{{order.companyFrom.name}}</p>
+			<p>{{order.from}}</p>
 			<h4>To:</h4>
-			<p>{{order.companyTo.name}}</p>
+			<p>{{order.Entidade}}</p>
 			<ul class="list-group">
-				<li class="list-group-item" ng-repeat="product in order.products">
+				<li class="list-group-item" ng-repeat="product in order.LinhasDoc">
 					<h4>Products:</h4>
 					<h5>Name: </h5>
-					<p>{{product.name}}</p>
+					<p>{{product.DescArtigo}}</p>
 					<h5>Quantity: </h5>
-					<p>4</p>
+					<p>{{product.Quantidade}}</p>
 					<h5> Unit price: </h5>
-					<p>15$</p>
-					<h5> Total price: </h5>
-					<p>60$</p>
+					<p>{{product.PrecoUnitario}}$</p>
 				</li>
 			</ul>
+			<h5> Total price: </h5>
+			<p>{{order.TotalMerc}}</p>
 			<h4><span ng-class="order.state=='done' ? 'label label-success' : 'label label-warning'">{{order.state}}</h4>
 		</li>
 	</ul>

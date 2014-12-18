@@ -4,23 +4,25 @@
   </div>
   <div class="col-md-6">
   	<ul class="list-group">
-		<li class="list-group-item" ng-repeat="receipt in erp.receipts" ng-show="erp.orderStateDone() && receipt.companyFrom != null">
-			<h3>Order</h3>
+		<li class="list-group-item" ng-repeat="receipt in erp.receipts" ng-show="true">
+			<h3>Receipt</h3>
 			<h4>From:</h4>
-			<p>{{receipt.companyFrom.name}}</p>
+			<p>{{receipt.from}}</p>
 			<h4>To:</h4>
-			<p>{{receipt.companyTo.name}}</p>
+			<p>{{receipt.Entidade}}</p>
 			<ul class="list-group">
+				<li class="list-group-item" ng-repeat="product in receipt.LinhasDoc">
 					<h4>Products:</h4>
 					<h5>Name: </h5>
-					<p>{{receipt.product.name}}</p>
+					<p>{{product.DescArtigo}}</p>
 					<h5>Quantity: </h5>
-					<p>4</p>
+					<p>{{product.Quantidade}}</p>
 					<h5> Unit price: </h5>
-					<p>15$</p>
-					<h5> Total price: </h5>
-					<p>60$</p>
+					<p>{{product.PrecoUnitario}}$</p>
+				</li>
 			</ul>
+			<h5> Total price: </h5>
+			<p>{{receipt.TotalMerc}}</p>
 		</li>
 	</ul>
   </div>
@@ -37,20 +39,22 @@
 	    		<li class="list-group-item" ng-repeat="order in erp.orders" ng-if="order.state == 'pending'">
 					<h3>Order</h3>
 					<h4>From:</h4>
-					<p>{{order.companyFrom.name}}</p>
+					<p>{{order.from}}</p>
 					<h4>To:</h4>
-					<p>{{order.companyTo.name}}</p>
+					<p>{{order.Entidade}}</p>
 					<ul class="list-group">
+						<li class="list-group-item" ng-repeat="product in order.LinhasDoc">
 							<h4>Products:</h4>
 							<h5>Name: </h5>
-							<p>{{order.product.name}}</p>
+							<p>{{product.DescArtigo}}</p>
 							<h5>Quantity: </h5>
-							<p>4</p>
+							<p>{{product.Quantidade}}</p>
 							<h5> Unit price: </h5>
-							<p>15$</p>
-							<h5> Total price: </h5>
-							<p>60$</p>
+							<p>{{product.PrecoUnitario}}$</p>
+						</li>
 					</ul>
+					<h5> Total price: </h5>
+					<p>{{order.TotalMerc}}</p>
 		  			<button type="button" ng-click="erp.newReceipt(order)"> Generate receipt </button>
 				</li>      
 			</div>

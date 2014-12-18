@@ -65,6 +65,8 @@
 			erp.companies = data;
 			getProducts();
 			getRelations();
+			getOrders();
+			getReceipts();
 		});
 
 		erp.products = [];
@@ -109,18 +111,48 @@
 							if(!hasRelation(cod, CodCli))
 								erp.relations.push({company1: cod, company2: CodCli});
 						}
+
+					});
+				})(cod);
+			}
+		};
+
+		erp.orders = [];
+		var getOrders = function () {
+			for(var c in erp.companies){
+				var cod = erp.companies[c].codEmpresa;
+				(function(cod) {
+					$http.get(apiURL+'/api/docCompra?codEmpresa='+cod+'&tipoDeDocumento=ECF').success(function (data) {
+						for(var d in data){
+							data[d].from = cod;
+							data[d].state = "pending";
+							erp.orders.push(data[d]);
+						}
+					});
+				})(cod);
+			}
+		};
+
+		erp.receipts = [];
+		var getReceipts = function () {
+			for(var c in erp.companies){
+				var cod = erp.companies[c].codEmpresa;
+				(function(cod) {
+					$http.get(apiURL+'/api/docVenda?codEmpresa='+cod+'&tipoDeDocumento=FA').success(function (data) {
+						for(var d in data){
+							data[d].from = cod;
+							data[d].state = "done";
+							erp.receipts.push(data[d]);
+						}
 						$("#spinner").hide();
 					});
 				})(cod);
 			}
 		};
 
+		
 
-		//this.products = getProducts();//GET products
-		this.orders = getOrders();//GET orders
-		this.order = {};
-		//this.relations = getRelations();//GET relations
-		this.receipts = getReceipts();
+
 		this.hasProduct = function (product, company) {
 			for(var p in erp.products)
 				if(erp.products[p].CodArtigo == product && $.inArray(company,erp.products[p].empresas) != -1)
@@ -162,11 +194,7 @@
 			return isSelected;
 		}
 
-		/*this.hasRelationx = function (company1, company2) {
-			if(getRelation(company1,company2) != null)
-				return true;
-			return false;
-		}*/
+
 		this.changeRelation = function (companyRelated, companyToRelate) {
 			if(this.status[companyToRelate.nomeEmpresa])
 				relations.push({company1: companyRelated.nomeEmpresa, company2: companyToRelate.nomeEmpresa});//POST relation
@@ -190,28 +218,12 @@
 		}
 		this.orderStateDone = function(){
 			for(var o in this.orders){
-				if(orders[o].state == 'done')
+				if(this.orders[o].state == 'done')
 					return true;
 			}
 				return false;
 		}
 	}]);
 
-	// ==== DataLayer ====
-	function getOrders(){
-		return orders;
-	}
-	function getReceipts(){
-		return receipts;
-	}
-	
-	 var orders = [];
-	 var receipts = [
-	 {
-	 	name: "receipt1",
-	 	buyer: "company2",
-	 	seller: "company3",
-	 	state: "done"
-	 }];
 
 })();
