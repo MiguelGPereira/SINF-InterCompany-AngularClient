@@ -9,12 +9,12 @@
                     {{companyToRelate.nomeEmpresa}}
                 </td>
                 <td>
-                    <input type="checkbox" ng-checked="erp.hasRelation(companyToRelate,erp.companyRelated)"
+                    <input type="checkbox" ng-checked="erp.hasRelation(companyToRelate.codEmpresa,erp.companyRelated.codEmpresa)"
                            ng-model="erp.status[companyToRelate.nomeEmpresa]"
                            ng-change="erp.changeRelation(erp.companyRelated,companyToRelate)"
                            ng-true-value="true"
                            ng-false-value="false"
-                           ng-disabled="erp.hasRelation(companyToRelate,erp.companyRelated)">
+                           ng-disabled="erp.hasRelation(companyToRelate.codEmpresa,erp.companyRelated.codEmpresa)">
                 </td>
             </tr>
         </table>

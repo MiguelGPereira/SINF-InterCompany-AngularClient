@@ -55,6 +55,9 @@
 		};
 		erp.hasRelation = hasRelation;
 
+		var spinner = new Spinner({top:'150%'}).spin();
+		$("#spinner").append(spinner.el);//hide spinner in last $http call
+
 		//End aux
 
 		erp.companies = [];
@@ -80,7 +83,6 @@
 								var product = data[d];
 								product.empresas = [cod];
 								erp.products.push(product);
-								console.log(product);
 							}
 						}
 					});
@@ -107,6 +109,7 @@
 							if(!hasRelation(cod, CodCli))
 								erp.relations.push({company1: cod, company2: CodCli});
 						}
+						$("#spinner").hide();
 					});
 				})(cod);
 			}
@@ -135,7 +138,7 @@
 			return isSelected;
 		}
 
-		/*this.hasRelation = function (company1, company2) {
+		/*this.hasRelationx = function (company1, company2) {
 			if(getRelation(company1,company2) != null)
 				return true;
 			return false;
@@ -164,24 +167,12 @@
 	}]);
 
 	// ==== DataLayer ====
-	function getRelations(){
-		return relations;
-	}
 	function getOrders(){
 		return orders;
 	}
 	function getReceipts(){
 		return receipts;
 	}
-	var relations = [
-	 {
-		company1: "Microsoft",
-		company2: "Google"
-	 },
-	{
-		company1: "Facebook",
-		company2: "Google"
-	}];
 	 var orders = [];
 	 var receipts = [
 	 {
