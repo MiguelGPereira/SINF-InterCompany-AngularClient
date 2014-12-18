@@ -30,6 +30,9 @@
         this.isSelected = function (checkTab) {
           return this.tab === checkTab;
         };
+        this.setTop = function (title){
+            $(".toptitle").text(title);
+        };
       },
       controllerAs: 'panel'
     };

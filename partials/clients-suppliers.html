@@ -11,7 +11,7 @@
                 <td>
                     <input type="checkbox" ng-checked="erp.hasRelation(companyToRelate.codEmpresa,erp.companyRelated.codEmpresa)"
                            ng-model="erp.status[companyToRelate.nomeEmpresa]"
-                           ng-change="erp.changeRelation(erp.companyRelated,companyToRelate)"
+                           ng-change="erp.setRelation(erp.companyRelated.codEmpresa,companyToRelate.codEmpresa)"
                            ng-true-value="true"
                            ng-false-value="false"
                            ng-disabled="erp.hasRelation(companyToRelate.codEmpresa,erp.companyRelated.codEmpresa)">

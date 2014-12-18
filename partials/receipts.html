@@ -1,28 +1,26 @@
+<!-- end post-wrapper-top -->
+<script text="javascript">
+
+</script>
+
 <div class="row">
-  <div class="col-md-6">
-	  <button ng-click="erp.setModal()"> New </button>
+  <div class="col-md-6" ng-hide="panel.isClient()">
+	  <a class="dmbutton button large" href="#" ng-click="erp.setModal()"><i class="fa fa-download"></i> Manage Receipts</a>
   </div>
   <div class="col-md-6">
   	<ul class="list-group">
 		<li class="list-group-item" ng-repeat="receipt in erp.receipts" ng-show="true">
-			<h3>Receipt</h3>
-			<h4>From:</h4>
-			<p>{{receipt.from}}</p>
-			<h4>To:</h4>
-			<p>{{receipt.Entidade}}</p>
+			<h5>Receipt:</h5>
+			<strong>From </strong>{{receipt.from}}<strong> To </strong>{{receipt.Entidade}} <br/>
+			<strong> Total price: </strong>{{receipt.TotalMerc}}€
+			<h5>Products:</h5>
 			<ul class="list-group">
 				<li class="list-group-item" ng-repeat="product in receipt.LinhasDoc">
-					<h4>Products:</h4>
-					<h5>Name: </h5>
-					<p>{{product.DescArtigo}}</p>
-					<h5>Quantity: </h5>
-					<p>{{product.Quantidade}}</p>
-					<h5> Unit price: </h5>
-					<p>{{product.PrecoUnitario}}$</p>
+					<strong>Name: </strong>{{product.DescArtigo}}
+					<strong> Quantity: </strong>{{product.Quantidade}}
+					<strong> Unit price: </strong>{{product.PrecoUnitario}}€
 				</li>
 			</ul>
-			<h5> Total price: </h5>
-			<p>{{receipt.TotalMerc}}</p>
 		</li>
 	</ul>
   </div>
@@ -37,24 +35,17 @@
 	 		</div>
 	  		<div class="modal-body">
 	    		<li class="list-group-item" ng-repeat="order in erp.orders" ng-if="order.state == 'pending'">
-					<h3>Order</h3>
-					<h4>From:</h4>
-					<p>{{order.from}}</p>
-					<h4>To:</h4>
-					<p>{{order.Entidade}}</p>
+					<h5>Order:</h5>
+					<strong>From </strong>{{order.from}}<strong> To </strong>{{order.Entidade}} <br/>
+					<strong> Total price: </strong>{{order.TotalMerc}}€
+					<h5>Products:</h5>
 					<ul class="list-group">
 						<li class="list-group-item" ng-repeat="product in order.LinhasDoc">
-							<h4>Products:</h4>
-							<h5>Name: </h5>
-							<p>{{product.DescArtigo}}</p>
-							<h5>Quantity: </h5>
-							<p>{{product.Quantidade}}</p>
-							<h5> Unit price: </h5>
-							<p>{{product.PrecoUnitario}}$</p>
+							<strong>Name: </strong>{{product.DescArtigo}}
+							<strong> Quantity: </strong>{{product.Quantidade}}
+							<strong> Unit price: </strong>{{product.PrecoUnitario}}€
 						</li>
 					</ul>
-					<h5> Total price: </h5>
-					<p>{{order.TotalMerc}}</p>
 		  			<button type="button" ng-click="erp.newReceipt(order)"> Generate receipt </button>
 				</li>      
 			</div>

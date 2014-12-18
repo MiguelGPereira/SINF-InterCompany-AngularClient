@@ -37,6 +37,14 @@
 			return false;
 		};
 
+		var getCompany = function (cod) {
+			for (var c in erp.companies) {
+				if (erp.companies[c].codEmpresa == cod)
+					return erp.companies[c];
+			}
+			return null;
+		};
+
 		var getRelation = function(company1, company2) {
 			var relations = erp.relations;
 			for(var r in relations)//GET relations
@@ -116,6 +124,40 @@
 				})(cod);
 			}
 		};
+		var setRelation = function (company1, company2) {
+			$("#spinner").show();
+			$http({//add company2 as client to company1
+				url: apiURL+'/api/clientes/'+company1,
+				method: "POST",
+				data: {"CodCliente": company2,"NomeCliente": getCompany(company2).nomeEmpresa,"NumContribuinte": "8765", "Moeda":"EUR"},
+				headers: {'Content-Type': 'application/json'}
+			}).success(function () {
+			});
+			$http({//add company2 as supplier to company1
+				url: apiURL+'/api/fornecedores/'+company1,
+				method: "POST",
+				data: {"CodFornecedor": company2,"NomeFornecedor": getCompany(company2).nomeEmpresa,"NumContribuinte": "8765","NomeFiscal": getCompany(company2).nomeEmpresa,"Moeda":"EUR"},
+				headers: {'Content-Type': 'application/json'}
+			}).success(function () {
+			});
+			$http({//add company1 as client to company2
+				url: apiURL+'/api/clientes/'+company2,
+				method: "POST",
+				data: {"CodCliente": company1,"NomeCliente": getCompany(company1).nomeEmpresa,"NumContribuinte": "12345", "Moeda":"EUR"},
+				headers: {'Content-Type': 'application/json'}
+			}).success(function () {
+			});
+			$http({//add company1 as supplier to company2
+				url: apiURL+'/api/fornecedores/'+company2,
+				method: "POST",
+				data: {"CodFornecedor": company1,"NomeFornecedor": getCompany(company1).nomeEmpresa,"NumContribuinte": "12345","NomeFiscal": getCompany(company1).nomeEmpresa, "Moeda":"EUR"},
+				headers: {'Content-Type': 'application/json'}
+			}).success(function () {
+				erp.relations.push({company1: company1, company2: company2});//only once
+				$("#spinner").hide();
+			});
+		};
+		erp.setRelation = setRelation;
 
 		erp.orders = [];
 		var getOrders = function () {
@@ -150,7 +192,7 @@
 			}
 		};
 
-		
+
 
 
 		this.hasProduct = function (product, company) {
@@ -194,12 +236,6 @@
 			return isSelected;
 		}
 
-
-		this.changeRelation = function (companyRelated, companyToRelate) {
-			if(this.status[companyToRelate.nomeEmpresa])
-				relations.push({company1: companyRelated.nomeEmpresa, company2: companyToRelate.nomeEmpresa});//POST relation
-
-		}
 		this.newReceipt = function (order) {
 			var receipt = {};
 			receipt.companyFrom = order.companyTo;
