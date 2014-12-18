@@ -27,26 +27,34 @@
 					return true;
 			return false;
 		};
+		var verifyOrder = function(order){
+			if(order.companyFrom == null || order.companyTo == null || order.companyFrom == order.companyTo)
+				return false;
+			return true;
+		}
 		this.addOrder = function () {
 			this.order.state = 'pending'
 			//console.log(this.order);
 			for(var p in this.order.products){
 			//	console.log("in for");
-				if (this.order.products[p].quantity == "0"
-				|| this.order.products[p].quantity == ""){
+				if (this.order.products[p].quantity == null){
 					delete this.order.products[p];
 			//		console.log("antes"+this.order.products[p].name);
 					/*this.order.products = $.grep(this.order.products, function (value) {
 						return value != this.order.products[p]; 
 					});*/
-					console.log("depois");
+					//console.log("depois");
 				}
 				
 
 			}
 			//console.log(this.order);
-			this.orders.push(this.order);//POST order
-			this.order = {};
+			if(verifyOrder(this.order)){
+				this.orders.push(this.order);//POST order
+				this.order = {};
+			}
+			else
+				alert("Can't order. You must fill all the fields. \n\nCan't order from yourself");
 		};
 		this.companyRelated= {};
 		this.isCompanySelected = function () {
@@ -88,6 +96,13 @@
 			if(this.status[company.name][product.name])
 				products[$.inArray(product,products)].companies.push(company.name);
 		}
+		this.orderStateDone = function(){
+			for(var o in this.orders){
+				if(orders[o].state == 'done')
+					return true;
+			}
+				return false;
+		}
 	});
 
 	// ==== DataLayer ====
@@ -108,31 +123,38 @@
 	}
 	var companies = [
 	{
-		name: "Microsoft"
+		name: "SuperChargers"
 	},
 	{
-	  	name: "Google"
+	  	name: "Xamexung"
 	},
 	{
-		name: "Facebook"
+		name: "PerfectGlass"
 	}];
 	var relations = [
 	 {
-		company1: "Microsoft",
-		company2: "Google"
+		company1: "SuperChargers",
+		company2: "Xamexung"
 	 },
 	{
-		company1: "Facebook",
-		company2: "Google"
+		company1: "Xamexung",
+		company2: "PerfectGlass"
 	}];
 	 var products = [
 	 {
-		name: "cobre",
-		companies: ["Microsoft","Google"]
+		name: "bateria litio RM600",
+		companies: ["SuperChargers"],
+		price: "3$"
 	 },
 	 {
-		name: "basalto",
-		companies: ["Google"]
+		name: "bateria litio FM6250",
+		companies: ["SuperChargers"],
+		price: "15$"
+	 },
+	 {
+		name: "bateria litio M300",
+		companies: ["SuperChargers"],
+		price: "12$"
 	 }];
 	 var orders = [];
 	 var receipts = [

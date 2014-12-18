@@ -8,7 +8,8 @@
 		<ul class="list-group">
 			<li class="list-group-item" ng-repeat="product in erp.products | orderBy:'name'">
 				<h4>{{erp.order.products[product.name].name=product.name}}</h4>
-				Quantity: <input type="text" ng-model="erp.order.products[product.name].quantity" ng-init="erp.order.products[product.name].quantity = 0"/>
+				<p>Unit price: {{erp.order.products[product.name].price=product.price}}</p>
+				Quantity: <input type="text" ng-model="erp.order.products[product.name].quantity"/>
 			</li>
 		</ul>
 		<input class="btn" type="submit" value="Create" />
@@ -17,12 +18,22 @@
   <div class="col-md-6">
   	<ul class="list-group">
 		<li class="list-group-item" ng-repeat="order in erp.orders">
-			<h4>{{order.companyFrom.name}}</h4>
-			<h4>{{order.companyTo.name}}</h4>
+			<h3>Order</h3>
+			<h4>From:</h4>
+			<p>{{order.companyFrom.name}}</p>
+			<h4>To:</h4>
+			<p>{{order.companyTo.name}}</p>
 			<ul class="list-group">
 				<li class="list-group-item" ng-repeat="product in order.products">
-					<h4>{{product.name}}</h4>
-					<h4>{{product.quantity}}</h4>
+					<h4>Products:</h4>
+					<h5>Name: </h5>
+					<p>{{product.name}}</p>
+					<h5>Quantity: </h5>
+					<p>4</p>
+					<h5> Unit price: </h5>
+					<p>15$</p>
+					<h5> Total price: </h5>
+					<p>60$</p>
 				</li>
 			</ul>
 			<h4><span ng-class="order.state=='done' ? 'label label-success' : 'label label-warning'">{{order.state}}</h4>
