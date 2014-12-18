@@ -63,6 +63,16 @@
 		};
 		erp.hasRelation = hasRelation;
 
+		var productsOfCompanies = function (codA,codB){
+			var productCompanies = [];
+			for(var p in erp.products){
+				if($.inArray(codA,erp.products[p].empresas)!= -1 && $.inArray(codB,erp.products[p].empresas)!= -1)
+					productCompanies.push(erp.products[p]);
+			}
+			return productCompanies;
+		};
+		erp.productsOfCompanies = productsOfCompanies;
+
 		var spinner = new Spinner({top:'150%'}).spin();
 		$("#spinner").append(spinner.el);//hide spinner in last $http call
 
@@ -87,8 +97,7 @@
 							var codA = data[d].CodArtigo;
 							var index = hasProduct(erp.products,codA);
 							if(index != null){
-								if(hasCompany(erp.products[index].empresas,cod))
-									erp.products[index].empresas.push(cod)
+								erp.products[index].empresas.push(cod);
 							} else {
 								var product = data[d];
 								product.empresas = [cod];

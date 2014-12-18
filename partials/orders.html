@@ -1,14 +1,14 @@
 <div class="row">
   <div class="col-md-6" ng-hide="panel.isSupplier()">
   	<form role="form" name="orderForm" ng-submit="erp.addOrder()">
-		<label>from:</label>
+		<label>From:</label>
 		<select class="form-control" ng-model="erp.order.companyFrom" ng-options="company.codEmpresa for company in erp.companies"></select>
-		<label>to:</label>
+		<label>To:</label>
 		<select class="form-control" ng-model="erp.order.companyTo" ng-options="company.codEmpresa for company in erp.companies"></select>
 		<ul class="list-group">
-			<li class="list-group-item" ng-repeat="product in erp.products | orderBy:'name'">
+			<li class="list-group-item"
+				ng-repeat="product in erp.productsOfCompanies(erp.order.companyFrom.codEmpresa,erp.order.companyTo.codEmpresa) | orderBy:'name'">
 				<h4>{{erp.order.products[product.DescArtigo].name=product.DescArtigo}}</h4>
-				<p>Unit price: {{erp.order.products[product.DescArtigo].price=product.DescArtigo}}</p>
 				Quantity: <input type="text" ng-model="erp.order.products[product.DescArtigo].quantity"/>
 			</li>
 		</ul>
