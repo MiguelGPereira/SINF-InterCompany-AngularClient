@@ -102,7 +102,6 @@
 								var product = data[d];
 								product.empresas = [cod];
 								erp.products.push(product);
-								console.log(product);
 							}
 						}
 					});
@@ -110,17 +109,22 @@
 			}
 		};
 		erp.addProduct = function(product, company){
+			var empresas = product.empresas;
 			delete product.empresas;
 			delete product.$$hashKey;
-			console.log(JSON.stringify(product));
-
 			$http({
 				url: apiURL+'/api/artigos/'+company.codEmpresa,
 				method: "POST",
-				data: product.CodArtigo,
+				data: product,
 				headers: {'Content-Type': 'application/json'}
 			}).success(function () {
 			});
+			empresas.push(company.codEmpresa);
+
+			for(var p in erp.products)
+				if(erp.products[p].CodArtigo == product.CodArtigo)
+					erp.products[p].empresas = empresas;
+
 		}
 
 		erp.relations = [];
@@ -246,7 +250,6 @@
 				docEnc.LinhasDoc = [];
 				for(var p in this.order.products){
 					var prod = {};
-					console.log(this.order.products[p]);
 					prod.CodArtigo = this.order.products[p].CodArtigo;
 					prod.Quantidade = parseInt(this.order.products[p].Quantidade);
 					prod.Desconto = 0;
@@ -256,7 +259,6 @@
 				}
 				docEnc.tipoDoc = "ECF";
 				this.orders.push(docEnc);
-				console.log(JSON.stringify(docEnc));
 				//POST order
 				$http({//add ECF to companyFrom
 					url: apiURL+'/api/docCompra/'+this.order.companyFrom.codEmpresa,
