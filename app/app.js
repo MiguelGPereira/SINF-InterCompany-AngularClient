@@ -102,13 +102,26 @@
 								var product = data[d];
 								product.empresas = [cod];
 								erp.products.push(product);
+								console.log(product);
 							}
 						}
 					});
 				})(cod);
 			}
 		};
-		
+		erp.addProduct = function(product, company){
+			delete product.empresas;
+			delete product.$$hashKey;
+			console.log(JSON.stringify(product));
+
+			$http({
+				url: apiURL+'/api/artigos/'+company.codEmpresa,
+				method: "POST",
+				data: product.CodArtigo,
+				headers: {'Content-Type': 'application/json'}
+			}).success(function () {
+			});
+		}
 
 		erp.relations = [];
 		var getRelations = function () {
@@ -216,24 +229,42 @@
 			return true;
 		}
 		this.addOrder = function () {
-			this.order.state = 'pending'
-			//console.log(this.order);
+			this.order.state = 'pending';
 			for(var p in this.order.products){
-			//	console.log("in for");
-				if (this.order.products[p].quantity == null){
+				if (this.order.products[p].Quantidade == null){
 					delete this.order.products[p];
-			//		console.log("antes"+this.order.products[p].name);
-					/*this.order.products = $.grep(this.order.products, function (value) {
-						return value != this.order.products[p]; 
-					});*/
-					//console.log("depois");
 				}
-				
-
 			}
-			//console.log(this.order);
 			if(verifyOrder(this.order)){
-				this.orders.push(this.order);//POST order
+				var docEnc = {};
+				docEnc.Entidade = this.order.companyTo.codEmpresa;
+				docEnc.NumDocExterno = "1";
+				//docEnc.NumDoc = erp.receipts[erp.receipts.length-1].NumDoc + 1;
+				//docEnc.Data = "2014-11-21T00:00:00";
+				//docEnc.TotalMerc = 0;
+				docEnc.Serie = "A";
+				docEnc.LinhasDoc = [];
+				for(var p in this.order.products){
+					var prod = {};
+					console.log(this.order.products[p]);
+					prod.CodArtigo = this.order.products[p].CodArtigo;
+					prod.Quantidade = parseInt(this.order.products[p].Quantidade);
+					prod.Desconto = 0;
+					prod.PrecoUnitario = parseInt(this.order.products[p].PrecoUnitario);
+					prod.Armazem = "A1";
+					docEnc.LinhasDoc.push(prod);
+				}
+				docEnc.tipoDoc = "ECF";
+				this.orders.push(docEnc);
+				console.log(JSON.stringify(docEnc));
+				//POST order
+				$http({//add ECF to companyFrom
+					url: apiURL+'/api/docCompra/'+this.order.companyFrom.codEmpresa,
+					method: "POST",
+					data: docEnc,
+					headers: {'Content-Type': 'application/json'}
+				}).success(function () {
+				});
 				this.order = {};
 			}
 			else
@@ -257,10 +288,7 @@
 		this.setModal = function(){
 			$('#newReceiptModal').appendTo("body").modal("show");
 		}
-		this.addProduct = function(product, company){
-			if(this.status[company.codEmpresa][product.CodArtigo])
-				products[$.inArray(product,products)].companies.push(company.nomeEmpresa);
-		}
+
 		this.orderStateDone = function(){
 			for(var o in this.orders){
 				if(this.orders[o].state == 'done')

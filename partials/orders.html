@@ -8,8 +8,9 @@
 		<ul class="list-group">
 			<li class="list-group-item"
 				ng-repeat="product in erp.productsOfCompanies(erp.order.companyFrom.codEmpresa,erp.order.companyTo.codEmpresa) | orderBy:'name'">
-				<h4>{{erp.order.products[product.DescArtigo].name=product.DescArtigo}}</h4>
-				Quantity: <input type="text" ng-model="erp.order.products[product.DescArtigo].quantity"/>
+				<h4>{{erp.order.products[product.CodArtigo].CodArtigo=product.CodArtigo}}</h4>
+				Price: {{erp.order.products[product.CodArtigo].PrecoUnitario = product.PrecoArtigo}}€ <br/>
+				Quantity: <input type="text" ng-model="erp.order.products[product.CodArtigo].Quantidade"/>
 			</li>
 		</ul>
 		<input class="btn" type="submit" value="Create" />
